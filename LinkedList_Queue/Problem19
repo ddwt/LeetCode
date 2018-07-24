@@ -1,0 +1,54 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
+    if (n < 0 || head == NULL) return head;
+    if (head->next == NULL) return NULL;
+    if (n == 2 && head->next->next == NULL) return head->next;
+    struct ListNode *temp = head;
+    struct ListNode *temp2 = head;
+    int len = 1;
+    while (temp && n--) {
+        if (temp->next != NULL) {
+            temp = temp->next;
+            len++;
+        } else {
+            return head->next;
+        }
+    }
+    while (temp ->next != NULL) {
+        temp = temp->next;
+        temp2 = temp2->next;
+        len++;
+    }
+    if (n > len) return head;
+    if (n == len) return head->next;
+    if (temp2->next != NULL)
+    temp2->next = temp2->next->next;
+    return head;
+}
+
+/** ���ִ���
+ *  struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
+ *  if(head == NULL) return NULL;
+ *   struct ListNode* l1 = head, *l2 = head;
+ *
+ *   for(int i=0; i<=n; i++) {
+ *       if(l1) l1 = l1->next;
+ *       else return head->next;
+ *   }
+ *
+ *   while(l1) {
+ *       l1 = l1->next;
+ *       l2 = l2->next;
+ *   }
+ *
+ *   if(l2->next) l2->next = l2->next->next;
+ *
+ *   return head;
+*}
+*/
