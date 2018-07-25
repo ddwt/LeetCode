@@ -1,0 +1,39 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+int ind = 0;
+int ind2 = 0;
+
+void preorder(struct TreeNode* root, int *data) {
+    if (root == NULL) return ;
+    data[ind++] = root->val;
+    if (root->left != NULL) preorder(root->left, data);
+    if (root->right != NULL) preorder(root->right, data);
+    return ;
+}
+
+void mpreorder(struct TreeNode* root, int *data) {
+    if (root == NULL) return ;
+    data[ind2++] = root->val;
+    if (root->right != NULL) mpreorder(root->right, data);
+    if (root->left != NULL) mpreorder(root->left, data);
+    return ;
+}
+
+bool isSymmetric(struct TreeNode* root) {
+    int data1[20] = {0};
+    int data2[20] = {0};
+    preorder(root, data1);
+    printf("\n");
+    mpreorder(root, data2);
+    for (int i = 0; i < 20; i++) {
+        if (data1[i] != data2[i]) return false;
+    }
+    return true;
+}
