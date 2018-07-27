@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+/**
+ * Return an array of arrays of size *returnSize.
+ * The sizes of the arrays are returned as *columnSizes array.
+ * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
+ */
+
+int get_depth(struct TreeNode *root) {
+    if (root == NULL) return 0;
+    int l = get_depth(root->left);
+    int r = get_depth(root->right);
+    return (l > r ? l : r) + 1;
+}
+
+void get_size(struct TreeNode *root, int *columnSize, int level) {
+    if (root == NULL) return ;
+    columnSize[level] += 1;
+    get_size(root->left, columnSize, level + 1);
+    get_size(root->right, columnSize, level + 1);
+    return ;
+}
+
+void get_result(struct TreeNode *root, int **ret, int *columnSize, int level) {
+    if (root == NULL) return ;
+    ret[level][columnSize[level]++] = root->val; //3(对应) 初始化后统计个数
+    get_result(root->left, ret, columnSize, level + 1);
+    get_result(root->right, ret, columnSize, level + 1);
+    return ;
+}
+
+int** levelOrder(struct TreeNode* root, int** columnSizes, int* returnSize) {
+    *returnSize = get_depth(root);
+    //printf("%d\n", *returnSize);
+    *columnSizes = (int *)calloc(*returnSize, sizeof(int)); //1 开辟returnSize个元素的数组
+    get_size(root, *columnSizes, 0); //2 把数组（包涵returnSize个元素）传过去
+    /*
+    for (int i = 0; i < *returnSize; i++) {
+        printf("count = %d\n", columnSizes[0][i]);
+    }
+    */
+    int **ret = (int **)malloc(sizeof(int *) * (*returnSize));
+    for (int i = 0; i < *returnSize; i++) { 
+        ret[i] = (int *)malloc(sizeof(int) * columnSizes[0][i]); //这才是有用的二维数组 第二唯存元素值 第一维是层数
+        columnSizes[0][i] = 0; //3 统计层数的使命完成 (初始化**) 然后换成统计count 归0 
+    }
+    get_result(root, ret, *columnSizes, 0);
+    return ret;
+    
+}
